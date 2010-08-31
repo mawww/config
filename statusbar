@@ -1,0 +1,82 @@
+#!/bin/bash
+
+interval=1
+fgcol="#838383"
+bgcol="#222222"
+iconcol="#bfbfbf"
+icondir=${HOME}/misc/icons
+barheight=8
+
+icon() {
+    echo "^fg($iconcol)^i($icondir/$1)^fg()"
+}
+
+update_date() {
+    current_date="^i($icondir/wclock.xpm) $(date +'%d/%m/%Y %H:%M:%S')"
+}
+
+update_battery() {
+    local color="#aaaaaa"
+
+    local full=$(</sys/class/power_supply/BAT0/charge_full)
+    local remaining=$(</sys/class/power_supply/BAT0/charge_now)
+    local percentage=$(($remaining * 100 / $full))
+    local status=$(</sys/class/power_supply/BAT0/status)
+
+    if [[ $percentage < $low ]]; then color="#ff4444"; fi
+
+    if [[ "$status" == Discharging ]]; then
+        local icon="power-bat2.xbm"
+    else
+        local icon="power-ac.xbm"
+    fi
+
+    battery_state="$(icon $icon) $(echo $percentage | gdbar -s o -h $barheight -w 50 -fg $color)"
+}
+
+last_rx=$(</sys/class/net/eth0/statistics/rx_bytes)
+last_tx=$(</sys/class/net/eth0/statistics/tx_bytes)
+
+update_net() {
+    local rx=$(</sys/class/net/eth0/statistics/rx_bytes)
+    local tx=$(</sys/class/net/eth0/statistics/tx_bytes)
+
+    local rx_rate=$(( ($rx - $last_rx) / 1024 ))
+    local tx_rate=$(( ($tx - $last_tx) / 1024 ))
+
+    last_rx=$rx
+    last_tx=$tx
+
+    net_state="$(icon net-wired2.xbm) ^fg(green)^i($icondir/up.xbm) ^fg()$tx_rate kB/s ^fg(red)^i($icondir/down.xbm) ^fg()$rx_rate kB/s"
+}
+
+update_cpu() {
+    local temp=$(</sys/class/thermal/thermal_zone0/temp)
+    temp=$(( temp / 1000 ))
+    cpu_state="$(icon cpu.xbm) $temp °C"
+}
+
+mail_tags=( inbox famille la-bande ensimag exherbo soulaks )
+update_mail() {
+    local tag
+    local mails=""
+    for tag in ${mail_tags[@]}; do
+        local count=$(notmuch count tag:$tag and tag:unread)
+        if [[ $count > 0 ]]; then
+            mails="$mails $tag($count)"
+        fi
+    done
+    if [[ -z $mails ]]; then mails="none"; fi
+    mail_state="$(icon envelope.xbm) $mails"
+}
+
+while true; do
+    update_date
+    update_battery
+    update_net
+    update_cpu
+    update_mail
+
+    echo  $mail_state $cpu_state $net_state $battery_state $current_date
+    sleep $interval
+done | dzen2 -ta r -fg $fgcol -bg $bgcol -w 680 -x 1000 -fn "Terminus:pixelsize=14"
