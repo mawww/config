@@ -8,7 +8,6 @@ set t_Co=256
 set laststatus=2
 
 set showcmd
-
 let g:full_name="Maxime Coste"
 
 set title
@@ -65,11 +64,11 @@ command! FixBlanks call FixBlanks()
 " Eugen Systems stuff
 augroup Eugen
     autocmd!
-    autocmd VimEnter * if match(getcwd(), "/home/mawww/slayer") != -1 |
-        \set tags+=~/slayer/Eugen\\\ Systems\\\ Code/CPP/Projects/tags,
-                  \~/slayer/Eugen\\\ Systems\\\ Data/Conflit/Code/Shaders/tags
-                  \~/slayer/Eugen\\\ Systems\\\ Code/Python/tags |
-        \cscope add ~/slayer/Eugen\ Systems\ Code/CPP/Projects/cscope.out
+    autocmd VimEnter * if match(getcwd(), "/home/mawww/prj/slayer") != -1 |
+        \set tags+=~/prj/slayer/Eugen\\\ Systems\\\ Code/CPP/Projects/tags,
+                  \~/prj/slayer/Eugen\\\ Systems\\\ Data/Conflit/Code/Shader/tags,
+                  \~/prj/slayer/Eugen\\\ Systems\\\ Code/Python/tags |
+        \cscope add ~/prj/slayer/Eugen\ Systems\ Code/CPP/Projects/cscope.out
     \endif
     autocmd BufRead *.eugprj set ft=eugprj
     autocmd BufRead *.ndf    set ft=ndf
@@ -83,7 +82,7 @@ endfunction
 
 augroup Exherbo
     autocmd!
-    autocmd BufNewFile *.exheres-0 call InsertCopyright
+    autocmd BufNewFile *.exheres-0 call InsertCopyright()
 augroup end
 
 " AutoComplPop
