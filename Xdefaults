@@ -5,6 +5,7 @@ URxvt.scrollBar: False
 URxvt.perl-ext-common: matcher
 URxvt.urlLauncher: uzbl-browser
 !URxvt.font: xft:DejaVu Sans Mono:style=Book:pixelsize=12
-URxvt.font: xft:Terminus:pixelsize=14
+URxvt.font: xft:Terminus:pixelsize=12
 URxvt.fading: 50
 URxvt.fadeColor: Black
+URxvt.urgentOnBell: true
