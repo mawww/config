@@ -25,6 +25,8 @@ nnoremap <C-W>] <C-W>g]
 autocmd FileType c\|cpp setlocal cindent
 set cinoptions=:0,g0,(0,w0,Ws
 
+let g:clang_complete_auto = 0
+
 function! InsertGuards() 
     let define = substitute(expand('%'), "[-\\/. ]", "_", "g") . "_INCLUDED"
     call append(0, [ "#ifndef " . define, "#define " . define, ])
@@ -37,7 +39,7 @@ endfunction
 
 augroup Cpp
     autocmd!
-    autocmd FileType cpp syn keyword cppKeywords2 override sealed
+    autocmd FileType cpp syn keyword cppKeywords2 override sealed offsetof
     autocmd FileType cpp hi link cppKeywords2 Keyword
     autocmd BufNewFile *.h call InsertGuards()
 augroup end
@@ -46,6 +48,12 @@ augroup end
 if filereadable("cscope.out")
     cscope add cscope.out
 endif
+
+" Background make
+command! -nargs=* BgMake
+    \ silent execute ":!make " . "<args>" . " > /tmp/make.output 2>&1 &" |
+    \ redraw! |
+    \ cfile /tmp/make.output | copen
 
 " Mr Proper stuffs
 augroup Whitespace
@@ -67,12 +75,22 @@ augroup Eugen
     autocmd VimEnter * if match(getcwd(), "/home/mawww/prj/slayer") != -1 |
         \set tags+=~/prj/slayer/Eugen\\\ Systems\\\ Code/CPP/Projects/tags,
                   \~/prj/slayer/Eugen\\\ Systems\\\ Data/Conflit/Code/Shader/tags,
+                  \~/prj/slayer/Eugen\\\ Systems\\\ Data/Conflit/Test/tags,
                   \~/prj/slayer/Eugen\\\ Systems\\\ Code/Python/tags |
         \cscope add ~/prj/slayer/Eugen\ Systems\ Code/CPP/Projects/cscope.out
     \endif
     autocmd BufRead *.eugprj set ft=eugprj
     autocmd BufRead *.ndf    set ft=ndf
 augroup end
+
+function! FixIncludeMistake(mistake, correction) abort
+    exec "vimgrep /^ *# *include \\+.*".a:mistake."/ Projects/**/*.cpp Projects/**/*.h"
+    while 1
+        exec "s/".a:mistake."/".a:correction."/g"
+        cn
+    endwhile
+endfunction
+
 
 " Exherbo
 function! InsertCopyright()
@@ -88,5 +106,9 @@ augroup end
 " AutoComplPop
 let g:acp_enableAtStartup = 1
 let g:acp_ignorecaseOption=0
+
+" man support
+runtime ftplugin/man.vim
+nnoremap K :Man <C-R><C-W><CR>
 
 colorscheme wombat256
