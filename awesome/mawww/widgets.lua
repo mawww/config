@@ -30,7 +30,7 @@ local volicon = icon("devices/audio-card-2.png")
 local volwidget = awful.widget.progressbar()
 volwidget:set_vertical(true)
 volwidget:set_width(6)
-vicious.register(volwidget, vicious.widgets.volume, "$1", 3, "Master")
+vicious.register(volwidget, vicious.widgets.volume, "$1", 2, "PCM")
 
 local baticon = icon("devices/battery.png")
 local batwidget = awful.widget.progressbar()
