@@ -3,7 +3,7 @@ URxvt.background: rgba:0000/0000/0000/cccc
 URxvt.foreground: Grey
 URxvt.scrollBar: False
 URxvt.perl-ext-common: matcher
-URxvt.urlLauncher: uzbl-browser
+URxvt.urlLauncher: chrome
 !URxvt.font: xft:DejaVu Sans Mono:style=Book:pixelsize=12
 URxvt.font: xft:Terminus:pixelsize=12
 URxvt.fading: 50
