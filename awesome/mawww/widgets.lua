@@ -1,10 +1,12 @@
 require("awful")
 require("vicious")
+require("mawww.notmuch")
 
 local awful = awful
 local vicious = vicious
 local widget = widget
 local image = image
+local notmuch = mawww.notmuch
 
 module("mawww.widgets")
 
@@ -38,6 +40,11 @@ batwidget:set_vertical(true)
 batwidget:set_width(6)
 vicious.register(batwidget, vicious.widgets.bat, "$2", 61, "BAT0")
 
+local mailicon = icon("emblems/emblem-mail.png")
+local mailwidget = widget({ type = "textbox" })
+mailwidget.text="inbox: ??"
+vicious.register(mailwidget, notmuch, "inbox: $1", 31, { "inbox" })
+
 systraywidget = widget({ type = "systray" })
 
 clockwidget = awful.widget.textclock({ align = "right" })
@@ -52,6 +59,8 @@ wibox.widgets = {
     volwidget,
     baticon,
     batwidget,
+    mailicon,
+    mailwidget,
     layout = awful.widget.layout.horizontal.leftright,
     {
         clockwidget,
