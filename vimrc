@@ -21,6 +21,9 @@ nnoremap <C-]> g<C-]>
 nnoremap <C-W><C-]> <C-W>g<C-]>
 nnoremap <C-W>] <C-W>g]
 
+" reload vimrc when modified
+autocmd! BufWritePost .vimrc source %
+
 " C/C++ Options
 autocmd FileType c\|cpp setlocal cindent
 set cinoptions=:0,g0,(0,w0,Ws
@@ -51,7 +54,8 @@ endif
 
 " Background make
 command! -nargs=* BgMake
-    \ silent execute ":!make " . "<args>" . " > /tmp/make.output 2>&1 &" |
+    \ silent execute ":!(make " . "<args>" . " > /tmp/make.output 2>&1;"
+                   \ "notify-send 'make finished' 'make <args> finished') &" |
     \ redraw! |
     \ cfile /tmp/make.output | copen
 
