@@ -31,7 +31,7 @@ set cinoptions=:0,g0,(0,w0,Ws
 let g:clang_complete_auto = 0
 
 function! InsertGuards() 
-    let define = substitute(expand('%'), "[-\\/. ]", "_", "g") . "_INCLUDED"
+    let define = substitute(substitute(expand('%'), "^.*/", "", ""), "[-\\/. ]", "_", "g") . "_INCLUDED"
     call append(0, [ "#ifndef " . define, "#define " . define, ])
     call append(line("$"), "#endif // " . define)
     if line("$") == 3
@@ -44,7 +44,7 @@ augroup Cpp
     autocmd!
     autocmd FileType cpp syn keyword cppKeywords2 override sealed offsetof
     autocmd FileType cpp hi link cppKeywords2 Keyword
-    autocmd BufNewFile *.h call InsertGuards()
+    autocmd BufNewFile *.{h,hh,hpp} call InsertGuards()
 augroup end
 
 " connect to cscope.out if possible
