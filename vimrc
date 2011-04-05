@@ -79,8 +79,10 @@ augroup Eugen
     autocmd VimEnter * if match(getcwd(), "slayer") != -1 |
         \set tags+=datatags |
     \endif
-    autocmd BufRead *.eugprj set ft=eugprj
-    autocmd BufRead *.ndf    set ft=ndf
+    autocmd VimEnter * if match(getcwd(), "slayer") != -1 |
+    autocmd BufNewFile *.cpp if match(getcwd(), "slayer") != -1 |
+        \call append(0, "#include \"StdAfx.h\"") |
+    \endif
 augroup end
 
 function! FixIncludeMistake(mistake, correction) abort
