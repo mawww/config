@@ -26,13 +26,13 @@ local memicon = icon("devices/memory.png")
 local memwidget = awful.widget.progressbar()
 memwidget:set_vertical(true)
 memwidget:set_width(6)
-vicious.register(memwidget, vicious.widgets.mem, "$1", 13)
+vicious.register(memwidget, vicious.widgets.mem, "$1", 1)
 
 local volicon = icon("devices/audio-card-2.png")
 local volwidget = awful.widget.progressbar()
 volwidget:set_vertical(true)
 volwidget:set_width(6)
-vicious.register(volwidget, vicious.widgets.volume, "$1", 2, "PCM")
+vicious.register(volwidget, vicious.widgets.volume, "$1", 1, "PCM")
 
 local baticon = icon("devices/battery.png")
 local batwidget = awful.widget.progressbar()
@@ -43,7 +43,7 @@ vicious.register(batwidget, vicious.widgets.bat, "$2", 61, "BAT0")
 local mailicon = icon("emblems/emblem-mail.png")
 local mailwidget = widget({ type = "textbox" })
 mailwidget.text="inbox: ??"
-vicious.register(mailwidget, notmuch, "inbox: $1", 31, { "inbox" })
+vicious.register(mailwidget, notmuch, "inbox: $1", 11, { "inbox" })
 
 systraywidget = widget({ type = "systray" })
 
