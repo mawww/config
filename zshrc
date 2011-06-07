@@ -23,18 +23,12 @@ setopt prompt_subst
 export PS1="%F{green}%n@%m%F{cyan}(%l) %F{blue}%~ %F{grey}>>> "
 
 # Paths
-export PATH="${HOME}/local/bin:${HOME}/local/i686-pc-mingw32/bin:${PATH}"
+export PATH="${HOME}/local/bin:${PATH}"
 export MANPATH="${HOME}/local/share/man:${MANPATH}"
 export LD_LIBRARY_PATH="${HOME}/local/lib;${LD_LIBRARY_PATH}"
-export PYTHONPATH="${HOME}/local/lib/python"
-
-# Distcc
-export DISTCC_POTENTIAL_HOSTS="localhost compilux"
+export PYTHONPATH="${HOME}/local/lib/python:${PYTHONPATH}"
 
 # Aliases
-alias herrie="screen -S herrie -dR herrie"
-alias wiki="vim ~/misc/wiki/index.wiki"
 alias ls="ls --color=auto"
 
-# Syntax highlighting
-source ~/prj/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zshrc_local
