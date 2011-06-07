@@ -80,7 +80,7 @@ augroup Eugen
     \endif
     autocmd VimEnter * if match(getcwd(), "slayer") != -1 |
     autocmd BufNewFile *.cpp if match(getcwd(), "slayer") != -1 |
-        \call append(0, "#include \"StdAfx.h\"") |
+        \call append(0, [ "#include \"StdAfx.h\"", "", "#include \"" . fnamemodify(expand('%'), ":t:r") . ".h\"", "", "namespace Eugen", "{", "}" ]) |
     \endif
 augroup end
 
