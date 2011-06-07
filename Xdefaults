@@ -9,3 +9,7 @@ URxvt.font: xft:Terminus:pixelsize=12
 URxvt.fading: 50
 URxvt.fadeColor: Black
 URxvt.urgentOnBell: true
+
+! Le bleu par defaut est plutot dur a lire
+URxvt.color4: RoyalBlue
+URxvt.color12: RoyalBlue
