@@ -4,7 +4,6 @@ set wildmenu wildmode=longest:full,full
 set incsearch nohlsearch
 set hidden
 set mouse=a
-set t_Co=256
 set laststatus=2
 
 set showcmd
@@ -92,18 +91,6 @@ function! FixIncludeMistake(mistake, correction) abort
         cn
     endwhile
 endfunction
-
-
-" Exherbo
-function! InsertCopyright()
-    call append(0, ["# Copyright 2010 Maxime Coste",
-                  \ "# Distributed under the terms of the GNU General Public License v2"])
-endfunction
-
-augroup Exherbo
-    autocmd!
-    autocmd BufNewFile *.exheres-0 call InsertCopyright()
-augroup end
 
 " AutoComplPop
 let g:acp_enableAtStartup = 1
