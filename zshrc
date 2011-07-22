@@ -17,6 +17,7 @@ autoload -Uz compinit
 compinit
 
 setopt extendedglob
+unsetopt no_match
 
 # Prompt
 autoload -U promptinit
