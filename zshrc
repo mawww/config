@@ -24,7 +24,8 @@ autoload -U promptinit
 promptinit
 setopt prompt_subst
 
-export PS1="%F{green}%n@%m%F{cyan}(%l) %F{blue}%~ %F{grey}>>> "
+export PS1="%F{green}%n@%m%F{cyan}(%l) %F{blue}%~ %F{grey}
+>>> "
 
 # Paths
 export PATH="${HOME}/local/bin:${PATH}"
