@@ -5,7 +5,10 @@ SAVEHIST=1000
 
 setopt hist_ignore_all_dups
 
+# Vi keybindings
 bindkey -v
+bindkey -M viins '^r' history-incremental-search-backward
+bindkey -M vicmd '^r' history-incremental-search-backward
 
 # Completion
 zstyle :compinstall filename '/home/mawww/.zshrc'
