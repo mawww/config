@@ -92,6 +92,12 @@ function! FixIncludeMistake(mistake, correction) abort
     endwhile
 endfunction
 
+augroup ZippedDocs
+    autocmd!
+    autocmd BufReadCmd *.docx,*.xlsx,*.pptx call zip#Browse(expand("<amatch>"))
+    autocmd BufReadCmd *.odt,*.ott,*.ods,*.ots,*.odp,*.otp,*.odg,*.otg call zip#Browse(expand("<amatch>"))
+augroup end
+
 " AutoComplPop
 let g:acp_enableAtStartup = 1
 let g:acp_ignorecaseOption=0
