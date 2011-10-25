@@ -42,6 +42,7 @@ endfunction
 augroup Cpp
     autocmd!
     autocmd FileType cpp syn keyword cppKeywords2 override sealed offsetof
+                     \ foreach foreachconst foreachitem foreachitemconst
     autocmd FileType cpp hi link cppKeywords2 Keyword
     autocmd BufNewFile *.{h,hh,hpp} call InsertGuards()
 augroup end
