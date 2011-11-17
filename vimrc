@@ -84,14 +84,6 @@ augroup Eugen
     \endif
 augroup end
 
-function! FixIncludeMistake(mistake, correction) abort
-    exec "vimgrep /^ *# *include \\+.*".a:mistake."/ Projects/**/*.cpp Projects/**/*.h"
-    while 1
-        exec "s/".a:mistake."/".a:correction."/g"
-        cn
-    endwhile
-endfunction
-
 augroup ZippedDocs
     autocmd!
     autocmd BufReadCmd *.docx,*.xlsx,*.pptx call zip#Browse(expand("<amatch>"))
