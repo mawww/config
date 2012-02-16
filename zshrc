@@ -40,4 +40,7 @@ export PYTHONPATH="${HOME}/local/lib/python:${PYTHONPATH}"
 # Aliases
 alias ls="ls --color=auto"
 
+alias -s -- pdf=zathura
+alias -s -- git='git clone'
+
 source ~/.zshrc_local
