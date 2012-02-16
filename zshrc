@@ -37,6 +37,9 @@ export MANPATH="${HOME}/local/share/man:${MANPATH}"
 export LD_LIBRARY_PATH="${HOME}/local/lib;${LD_LIBRARY_PATH}"
 export PYTHONPATH="${HOME}/local/lib/python:${PYTHONPATH}"
 
+# Kakoune!
+export EDITOR=kak
+
 # Aliases
 alias ls="ls --color=auto"
 
