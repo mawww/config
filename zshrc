@@ -16,6 +16,10 @@ zstyle :compinstall filename '/home/mawww/.zshrc'
 autoload -Uz compinit
 compinit
 
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
 setopt extendedglob
 unsetopt no_match
 
