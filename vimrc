@@ -10,6 +10,7 @@ set showcmd
 let g:full_name="Maxime Coste"
 
 set title
+set encoding=utf-8
 set termencoding=utf-8
 
 filetype plugin indent on
@@ -99,4 +100,4 @@ let g:acp_ignorecaseOption=0
 runtime ftplugin/man.vim
 nnoremap K :Man <C-R><C-W><CR>
 
-colorscheme wombat256
+colorscheme desert
