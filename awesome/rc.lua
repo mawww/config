@@ -304,7 +304,7 @@ awful.rules.rules = {
                      focus = true,
                      keys = clientkeys,
                      buttons = clientbuttons } },
-    { rule = { class = "MPlayer" },
+    { rule = { class = "mplayer2" },
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
