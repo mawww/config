@@ -100,4 +100,9 @@ let g:acp_ignorecaseOption=0
 runtime ftplugin/man.vim
 nnoremap K :Man <C-R><C-W><CR>
 
-colorscheme desert
+" alternate
+let g:alternateSearchPath = 'sfr:../Sources,sfr:../Headers'
+let g:alternateNoDefaultAlternate = 1
+let g:alternateRelativeFiles = 1
+
+colorscheme wombat256
