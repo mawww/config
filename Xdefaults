@@ -2,7 +2,7 @@ URxvt.depth: 32
 URxvt.background: rgba:0000/0000/0000/cccc
 URxvt.foreground: Grey
 URxvt.scrollBar: False
-URxvt.perl-ext-common: matcher
+URxvt.perl-ext-common: matcher,font-size
 URxvt.urlLauncher: firefox
 !URxvt.font: xft:DejaVu Sans Mono:style=Book:pixelsize=12
 URxvt.font: xft:Terminus:pixelsize=12
@@ -10,6 +10,11 @@ URxvt.fading: 50
 URxvt.fadeColor: Black
 URxvt.urgentOnBell: true
 URxvt*cutchars: `"()'*<>[]{|}
+
+URxvt.keysym.C-Up:     perl:font-size:increase
+URxvt.keysym.C-Down:   perl:font-size:decrease
+URxvt.keysym.C-S-Up:   perl:font-size:incglobal
+URxvt.keysym.C-S-Down: perl:font-size:decglobal
 
 ! Le bleu par defaut est plutot dur a lire
 URxvt.color4: RoyalBlue
