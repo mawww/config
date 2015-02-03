@@ -5,6 +5,18 @@ set global clang_options '-std=gnu++11'
 
 hook global WinSetOption filetype=cpp %{
     clang-enable-autocomplete 
+    clang-enable-diagnostics
+    map window normal <c-p> :clang-parse<ret>
+    %sh{
+        if [ $PWD == "/home/mawww/prj/kakoune/src" ]; then
+           echo 'set buffer clang_options "%opt{clang_options} -include-pch precomp-header.h.gch"'
+        fi
+    }
+    #ycmd-enable-autocomplete
+}
+
+hook global WinSetOption filetype=python %{
+    jedi-enable-autocomplete
 }
 
 hook global WinCreate .* %{
@@ -16,3 +28,7 @@ map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
 hook global BufCreate '\*grep\*' %{ map -- global normal - ':next<ret>' }
 hook global BufCreate '\*make\*' %{ map -- global normal - ':errnext<ret>' }
+
+set global ycmd_path /home/mawww/prj/ycmd/ycmd/
+
+# set global autoinfo 2
