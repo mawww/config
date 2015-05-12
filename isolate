@@ -1,0 +1,2 @@
+#!/bin/sh
+sox -n -p synth brownnoise | sox -p -d vol 0.3
