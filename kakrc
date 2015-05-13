@@ -26,8 +26,10 @@ hook global WinCreate .* %{
 
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
-hook global BufCreate '\*grep\*' %{ map -- global normal - ':next<ret>' }
-hook global BufCreate '\*make\*' %{ map -- global normal - ':errnext<ret>' }
+hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':next<ret>' }
+hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':errnext<ret>' }
+
+hook global WinCreate ^[^*]+$ %{ addhl number_lines }
 
 set global ycmd_path /home/mawww/prj/ycmd/ycmd/
 
