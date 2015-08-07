@@ -1,7 +1,7 @@
 set global makecmd 'make -j8'
 set global grepcmd 'ag --column'
 
-set global clang_options '-std=gnu++11'
+set global clang_options '-std=c++11'
 
 hook global WinSetOption filetype=cpp %{
     clang-enable-autocomplete 
@@ -26,11 +26,13 @@ hook global WinCreate .* %{
 
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
-hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':next<ret>' }
-hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':errnext<ret>' }
+hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next<ret>' }
+hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next<ret>' }
 
 hook global WinCreate ^[^*]+$ %{ addhl number_lines }
 
 set global ycmd_path /home/mawww/prj/ycmd/ycmd/
 
 # set global autoinfo 2
+
+colorscheme zenburn
