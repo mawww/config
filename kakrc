@@ -35,4 +35,17 @@ set global ycmd_path /home/mawww/prj/ycmd/ycmd/
 
 # set global autoinfo 2
 
+set global ui_options ncurses_status_on_top=yes
+
+def ide %{
+    nameclient main
+    set global jumpclient main
+
+    new nameclient tools
+    set global toolsclient tools
+
+    new nameclient docs
+    set global docsclient docs
+}
+
 colorscheme zenburn
