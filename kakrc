@@ -25,11 +25,25 @@ hook global WinSetOption filetype=python %{
     }
 }
 
+decl -hidden regex curword
+face CurWord default,rgb:4a4a4a
+
 hook global WinCreate .* %{
     addhl show_matching
-    addhl search
+    addhl dynregex '%reg{/}' 0:+u
+
+    # Highlight the word under the cursor
+    addhl dynregex '%opt{curword}' 0:CurWord
 }
 
+hook global NormalIdle .* %{
+    eval -draft %{ try %{
+        exec <space><a-i>w <a-k>^\w+$<ret>
+        set buffer curword "\b\Q%val{selection}\E\b"
+    } catch %{
+        set buffer curword ''
+    } }
+}
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
 hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next<ret>' }
