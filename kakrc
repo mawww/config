@@ -46,6 +46,10 @@ hook global NormalIdle .* %{
 }
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
+map global user p '!xclip -o<ret>'
+map global user y '<a-|>xclip -i<ret>'
+map global user R '|xclip -i<ret>'
+
 hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next<ret>' }
 hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next<ret>' }
 
