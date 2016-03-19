@@ -17,6 +17,12 @@ hook global WinSetOption filetype=cpp %{
 
 hook global WinSetOption filetype=python %{
     jedi-enable-autocomplete
+    %sh{
+        if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
+           echo "set buffer jedi_python_path '/usr/share/gdb/python'"
+           echo "set buffer path './:/usr/share/gdb/python'"
+        fi
+    }
 }
 
 hook global WinCreate .* %{
