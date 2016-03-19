@@ -46,6 +46,7 @@ hook global NormalIdle .* %{
 }
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
+map global user n ':clang-diagnostics-next<ret>'
 map global user p '!xclip -o<ret>'
 map global user y '<a-|>xclip -i<ret>'
 map global user R '|xclip -i<ret>'
@@ -60,6 +61,8 @@ set global ycmd_path /home/mawww/prj/ycmd/ycmd/
 # set global autoinfo 2
 
 set global ui_options ncurses_status_on_top=yes
+
+map global normal '#' :comment-line<ret>
 
 def ide %{
     nameclient main
