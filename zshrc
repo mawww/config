@@ -34,7 +34,7 @@ export PS1="%F{green}%n@%m%F{cyan}(%l) %F{blue}%~ %F{grey}
 # Paths
 export PATH="${HOME}/local/bin:${PATH}"
 export MANPATH="${HOME}/local/share/man:${MANPATH}"
-export LD_LIBRARY_PATH="${HOME}/local/lib;${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${HOME}/local/lib:${LD_LIBRARY_PATH}"
 export PYTHONPATH="${HOME}/local/lib/python:${PYTHONPATH}"
 
 # Kakoune!
@@ -47,3 +47,6 @@ alias -s -- pdf=zathura
 alias -s -- git='git clone'
 
 source ~/.zshrc_local
+
+# OPAM configuration
+. /home/mawww/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
