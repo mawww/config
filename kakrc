@@ -1,15 +1,15 @@
 set global makecmd 'make -j8'
 set global grepcmd 'ag --column'
+map global normal <c-p> :lint<ret>
 
-set global clang_options '-std=c++11'
-
-hook global WinSetOption filetype=cpp %{
+hook global WinSetOption filetype=(c|cpp) %{
     clang-enable-autocomplete 
     clang-enable-diagnostics
-    map window normal <c-p> :clang-parse<ret>
+    alias window lint clang-parse
+    alias window lint-next clang-diagnostics-next
     %sh{
-        if [ $PWD == "/home/mawww/prj/kakoune/src" ]; then
-           echo 'set buffer clang_options "%opt{clang_options} -include-pch precomp-header.h.gch"'
+        if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
+           echo "set buffer clang_options '-std=c++14 -include-pch precomp-header.h.gch'"
         fi
     }
     #ycmd-enable-autocomplete
@@ -17,6 +17,9 @@ hook global WinSetOption filetype=cpp %{
 
 hook global WinSetOption filetype=python %{
     jedi-enable-autocomplete
+    flake8-enable-diagnostics
+    alias window lint flake8-lint
+    alias window lint-next flake8-diagnostics-next
     %sh{
         if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
            echo "set buffer jedi_python_path '/usr/share/gdb/python'"
@@ -46,7 +49,7 @@ hook global NormalIdle .* %{
 }
 map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
 
-map global user n ':clang-diagnostics-next<ret>'
+map global user n ':lint-next<ret>'
 map global user p '!xclip -o<ret>'
 map global user y '<a-|>xclip -i<ret>'
 map global user R '|xclip -i<ret>'
