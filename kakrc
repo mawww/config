@@ -78,4 +78,7 @@ def ide %{
     set global docsclient docs
 }
 
+hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
+hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
+
 colorscheme zenburn
