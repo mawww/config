@@ -9,7 +9,7 @@ hook global WinSetOption filetype=(c|cpp) %{
     alias window lint-next clang-diagnostics-next
     %sh{
         if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
-           echo "set buffer clang_options '-std=c++14 -include-pch precomp-header.h.gch'"
+           echo "set buffer clang_options '-std=c++14 -include-pch precomp-header.h.gch -DKAK_DEBUG'"
         fi
     }
     #ycmd-enable-autocomplete
@@ -41,13 +41,13 @@ hook global WinCreate .* %{
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
-        exec <space><a-i>w <a-k>^\w+$<ret>
+        exec <space><a-i>w <a-k>\`\w+\'<ret>
         set buffer curword "\b\Q%val{selection}\E\b"
     } catch %{
         set buffer curword ''
     } }
 }
-map global normal = ':prompt math: m %{exec a<lt>c-r>m<lt>esc>|bc<lt>ret>}<ret>'
+map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
 
 map global user n ':lint-next<ret>'
 map global user p '!xclip -o<ret>'
@@ -81,4 +81,6 @@ def ide %{
 hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
 hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
 
-colorscheme zenburn
+def find -params 1 -shell-candidates %{ find . -type f } %{ edit %arg{1} }
+
+colorscheme base16
