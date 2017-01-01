@@ -39,14 +39,18 @@ hook global WinCreate .* %{
     addhl dynregex '%opt{curword}' 0:CurWord
 }
 
-hook global NormalIdle .* %{
-    eval -draft %{ try %{
+def -hidden _update_curword %{
+    eval -no-hooks -draft %{ try %{
         exec <space><a-i>w <a-k>\`\w+\'<ret>
         set buffer curword "\b\Q%val{selection}\E\b"
     } catch %{
         set buffer curword ''
     } }
 }
+
+hook global NormalIdle .* _update_curword
+hook global NormalKey .* _update_curword
+
 map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
 
 map global user n ':lint-next<ret>'
