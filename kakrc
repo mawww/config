@@ -68,13 +68,13 @@ set global ui_options ncurses_status_on_top=true
 map global normal '#' :comment-line<ret>
 
 def ide %{
-    nameclient main
+    rename-client main
     set global jumpclient main
 
-    new nameclient tools
+    new rename-client tools
     set global toolsclient tools
 
-    new nameclient docs
+    new rename-client docs
     set global docsclient docs
 }
 
