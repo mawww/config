@@ -12,12 +12,11 @@ hook global WinSetOption filetype=(c|cpp) %{
            echo "set buffer clang_options '-std=c++14 -include-pch precomp-header.h.gch -DKAK_DEBUG'"
         fi
     }
-    #ycmd-enable-autocomplete
 }
 
 hook global WinSetOption filetype=python %{
     jedi-enable-autocomplete
-    flake8-enable-diagnostics
+    # flake8-enable-diagnostics
     alias window lint flake8-lint
     alias window lint-next-error flake8-diagnostics-next
     %sh{
@@ -51,6 +50,7 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 
 map global user n ':lint-next-error<ret>'
 map global user p '!xclip -o<ret>'
+map global user P '<a-!>xclip -o<ret>'
 map global user y '<a-|>xclip -i<ret>; :echo -markup "{Information}copied selection to X11 clipboard"<ret>'
 map global user R '|xclip -o<ret>'
 
@@ -61,10 +61,6 @@ hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next-match<r
 hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next-error<ret>' }
 
 hook global WinCreate ^[^*]+$ %{ add-highlighter window number_lines }
-
-# set global ycmd_path /home/mawww/prj/ycmd/ycmd/
-
-# set global autoinfo 2
 
 set global ui_options ncurses_status_on_top=true
 
@@ -84,6 +80,6 @@ def ide %{
 hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
 hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
 
-def find -params 1 -shell-candidates %{ find . -type f } %{ edit %arg{1} }
+def find -params 1 -shell-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
 
 colorscheme base16
