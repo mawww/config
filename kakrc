@@ -1,85 +1,117 @@
-set global makecmd 'make -j8'
-set global grepcmd 'ag --column'
-map global normal <c-p> :lint<ret>
+# User preference
+# ───────────────
+
+set-option global makecmd 'make -j8'
+set-option global grepcmd 'ag --column'
+set-option global clang_options -std=c++1y
+set-option global ui_options ncurses_status_on_top=true
+
+colorscheme gruvbox
+
+add-highlighter global show_matching
+add-highlighter global dynregex '%reg{/}' 0:+u
+
+hook global WinCreate ^[^*]+$ %{ add-highlighter window number_lines }
+
+# Enable editor config
+# ────────────────────
+
+hook global BufOpenFile .* %{ editorconfig-load }
+hook global BufNewFile .* %{ editorconfig-load }
+
+# Filetype specific hooks
+# ───────────────────────
 
 hook global WinSetOption filetype=(c|cpp) %{
     clang-enable-autocomplete 
     clang-enable-diagnostics
     alias window lint clang-parse
     alias window lint-next-error clang-diagnostics-next
-    %sh{
-        if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
-           echo "set buffer clang_options '-std=c++14 -include-pch precomp-header.h.gch -DKAK_DEBUG'"
-        fi
-    }
 }
 
 hook global WinSetOption filetype=python %{
     jedi-enable-autocomplete
-    # flake8-enable-diagnostics
-    alias window lint flake8-lint
-    alias window lint-next-error flake8-diagnostics-next
-    %sh{
-        if [ $PWD = "/home/mawww/prj/kakoune/src" ]; then
-           echo "set buffer jedi_python_path '/usr/share/gdb/python'"
-           echo "set buffer path './:/usr/share/gdb/python'"
-        fi
-    }
+    lint-enable
+    set-option global lintcmd 'flake8'
 }
 
-decl -hidden regex curword
-face CurWord default,rgb:4a4a4a
+map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
 
-hook global WinCreate .* %{
-    add-highlighter window show_matching
-    add-highlighter window dynregex '%reg{/}' 0:+u
+# Highlight the word under the cursor
+# ───────────────────────────────────
 
-    # Highlight the word under the cursor
-    add-highlighter window dynregex '%opt{curword}' 0:CurWord
-}
+declare-option -hidden regex curword
+set-face CurWord default,rgb:4a4a4a
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
         exec <space><a-i>w <a-k>\A\w+\z<ret>
-        set buffer curword "\b\Q%val{selection}\E\b"
+        set-option buffer curword "\b\Q%val{selection}\E\b"
     } catch %{
-        set buffer curword ''
+        set-option buffer curword ''
     } }
 }
+add-highlighter global dynregex '%opt{curword}' 0:CurWord
+
+# Custom mappings
+# ───────────────
+
 map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
 
-map global user n ':lint-next-error<ret>'
-map global user p '!xclip -o<ret>'
-map global user P '<a-!>xclip -o<ret>'
-map global user y '<a-|>xclip -i<ret>; :echo -markup "{Information}copied selection to X11 clipboard"<ret>'
-map global user R '|xclip -o<ret>'
+# System clipboard handling
+# ─────────────────────────
 
-map global user g ':gdb-helper<ret>'
-map global user G ':gdb-helper-repeat<ret>'
+%sh{
+    case $(uname) in
+        Linux) copy="xclip -i"; paste="xclip -o" ;;
+        Darwin)  copy="pbcopy"; paste="pbpaste" ;;
+    esac
+
+    printf "map global user -docstring 'paste (after) from clipboard' p '!%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'paste (before) from clipboard' P '<a-!>%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'yank to clipboard' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy"
+    printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
+}
+
+# Various mappings
+# ────────────────
+
+map global normal '#' :comment-line<ret>
+
+map global user -docstring 'next lint error' n ':lint-next-error<ret>'
+map global normal <c-p> :lint<ret>
+
+map global user -docstring 'gdb helper mode' g ':gdb-helper<ret>'
+map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>'
 
 hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next-match<ret>' }
 hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next-error<ret>' }
 
-hook global WinCreate ^[^*]+$ %{ add-highlighter window number_lines }
-
-set global ui_options ncurses_status_on_top=true
-
-map global normal '#' :comment-line<ret>
-
-def ide %{
-    rename-client main
-    set global jumpclient main
-
-    new rename-client tools
-    set global toolsclient tools
-
-    new rename-client docs
-    set global docsclient docs
-}
+# Enable <tab>/<backtab> for insert completion selection
+# ──────────────────────────────────────────────────────
 
 hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
 hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
 
-def find -params 1 -shell-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
+# Helper commands
+# ───────────────
 
-colorscheme base16
+define-command find -params 1 -shell-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
+
+define-command mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
+
+define-command ide %{
+    rename-client main
+    set-option global jumpclient main
+
+    new rename-client tools
+    set-option global toolsclient tools
+
+    new rename-client docs
+    set-option global docsclient docs
+}
+
+# Load local Kakoune config file if it exists
+# ───────────────────────────────────────────
+
+%sh{ [ -f $kak_config/local.kak ] && echo "source $kak_config/local.kak" }
