@@ -41,7 +41,7 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 # ───────────────────────────────────
 
 declare-option -hidden regex curword
-set-face CurWord default,rgb:4a4a4a
+set-face global CurWord default,rgb:4a4a4a
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
@@ -87,11 +87,11 @@ map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>
 hook global BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next-match<ret>' }
 hook global BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next-error<ret>' }
 
-# Enable <tab>/<backtab> for insert completion selection
+# Enable <tab>/<s-tab> for insert completion selection
 # ──────────────────────────────────────────────────────
 
-hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <backtab> <c-p> }
-hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <backtab> <c-p> }
+hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <s-tab> <c-p> }
+hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <s-tab> <c-p> }
 
 # Helper commands
 # ───────────────
