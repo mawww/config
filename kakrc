@@ -8,10 +8,10 @@ set-option global ui_options ncurses_status_on_top=true
 
 colorscheme gruvbox
 
-add-highlighter global show_matching
-add-highlighter global dynregex '%reg{/}' 0:+u
+add-highlighter global/ show-matching
+add-highlighter global/ dynregex '%reg{/}' 0:+u
 
-hook global WinCreate ^[^*]+$ %{ add-highlighter window number_lines }
+hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
 
 # Enable editor config
 # ────────────────────
@@ -51,7 +51,7 @@ hook global NormalIdle .* %{
         set-option buffer curword ''
     } }
 }
-add-highlighter global dynregex '%opt{curword}' 0:CurWord
+add-highlighter global/ dynregex '%opt{curword}' 0:CurWord
 
 # Custom mappings
 # ───────────────
@@ -61,7 +61,7 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 # System clipboard handling
 # ─────────────────────────
 
-%sh{
+evaluate-commands %sh{
     case $(uname) in
         Linux) copy="xclip -i"; paste="xclip -o" ;;
         Darwin)  copy="pbcopy"; paste="pbpaste" ;;
@@ -114,4 +114,4 @@ define-command ide %{
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
 
-%sh{ [ -f $kak_config/local.kak ] && echo "source $kak_config/local.kak" }
+evaluate-commands %sh{ [ -f $kak_config/local.kak ] && echo "source $kak_config/local.kak" }
