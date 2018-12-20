@@ -1,0 +1,7 @@
+set download-path=~/dl/
+set hint-keys=abcdefghijklmnopqrstuvwxyz
+set hint-keys-same-length=true
+set hint-timeout=0
+
+set editor-command=urxvt -e kak %s
+set x-hint-command=:sh! mpv <C-R>;<CR>
