@@ -6,7 +6,7 @@ URxvt.perl-ext-common: matcher,font-size
 URxvt.url-launcher: vimb
 !URxvt.font: xft:DejaVu Sans Mono:style=Book:pixelsize=12
 URxvt.font: xft:Terminus:pixelsize=12
-URxvt.fading: 50
+URxvt.fading: 20
 URxvt.fadeColor: Black
 URxvt.urgentOnBell: true
 URxvt*cutchars: `"()'*<>[]{|}
