@@ -96,7 +96,7 @@ hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap wi
 # Helper commands
 # ───────────────
 
-define-command find -params 1 -shell-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
+define-command find -params 1 -shell-script-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
 
 define-command mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
 
