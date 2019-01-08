@@ -1,5 +1,13 @@
 #!/bin/sh
 
-name=$(basename "$1" .zip)
-mkdir "$name"
-unzip -d "$name" "$1"
+if [ $# -eq 0 ]; then
+    echo "usage $0 <bandcamp zip files>..."
+    exit 0;
+fi
+
+while [ $# -ne 0 ]; do
+    name=$(basename "$1" .zip)
+    mkdir "$name"
+    unzip -d "$name" "$1"
+    shift
+done
