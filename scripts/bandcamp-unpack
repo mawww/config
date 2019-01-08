@@ -1,0 +1,5 @@
+#!/bin/sh
+
+name=$(basename "$1" .zip)
+mkdir "$name"
+unzip -d "$name" "$1"
