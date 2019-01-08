@@ -5,3 +5,5 @@ set hint-timeout=0
 
 set editor-command=urxvt -e kak %s
 set x-hint-command=:sh! mpv <C-R>;<CR>
+
+autocmd LoadCommitted http?://web.whatsapp.com/* set user-agent=Mozilla/5.0 (X11; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0
