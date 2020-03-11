@@ -85,8 +85,8 @@ map global normal <c-p> :lint<ret>
 map global user -docstring 'gdb helper mode' g ':gdb-helper<ret>'
 map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>'
 
-hook global -always BufOpenFifo '\*grep\*' %{ map -- global normal - ':grep-next-match<ret>' }
-hook global -always BufOpenFifo '\*make\*' %{ map -- global normal - ':make-next-error<ret>' }
+hook global -always BufOpenFifo '\*grep\*' %{ map -- global normal - ': grep-next-match<ret>' }
+hook global -always BufOpenFifo '\*make\*' %{ map -- global normal - ': make-next-error<ret>' }
 
 # Enable <tab>/<s-tab> for insert completion selection
 # ──────────────────────────────────────────────────────
