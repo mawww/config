@@ -69,7 +69,8 @@ evaluate-commands %sh{
 
     printf "map global user -docstring 'paste (after) from clipboard' p '!%s<ret>'\n" "$paste"
     printf "map global user -docstring 'paste (before) from clipboard' P '<a-!>%s<ret>'\n" "$paste"
-    printf "map global user -docstring 'yank to clipboard' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy"
+    printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 primary}<ret>'\n" "$copy"
+    printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy -selection clipboard"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
@@ -116,6 +117,38 @@ define-command delete-buffers-matching -params 1 %{
         evaluate-commands %sh{ case "$kak_buffile" in $1) echo "delete-buffer" ;; esac }
     }
 }
+
+declare-option -hidden str swap_buffer_target
+define-command swap-buffer-with -override -params 1 -client-completion %{
+    set-option global swap_buffer_target %val{bufname}
+    edit -scratch # release current window for other client
+    evaluate-commands -client %arg{1} "
+        set-option global swap_buffer_target %%val{bufname}
+        buffer %opt{swap_buffer_target}
+    "
+    delete-buffer # delete the temporary scratch buffer
+    buffer %opt{swap_buffer_target}
+}
+
+define-command -params .. fifo %{ evaluate-commands %sh{
+     output=$(mktemp -d "${TMPDIR:-/tmp}"/kak-fifo.XXXXXXXX)/fifo
+     mkfifo ${output}
+     ( eval "$@" > ${output} 2>&1 & ) > /dev/null 2>&1 < /dev/null
+
+     printf %s\\n "evaluate-commands -try-client '$kak_opt_toolsclient' %{
+               edit! -fifo ${output} *fifo*
+               hook -always -once buffer BufCloseFifo .* %{ nop %sh{ rm -r $(dirname ${output}) } }
+           }"
+}}
+
+declare-option int gdb_server_port 5678
+declare-option str gdb_server_cmd "gdbserver :%opt{gdb_server_port}"
+
+define-command gdb-server -params .. %{
+    fifo %opt{gdb_server_cmd} %arg{@}
+    gdb-session-new -ex "target remote :%opt{gdb_server_port}"
+}
+
 
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
