@@ -1,0 +1,16 @@
+function cdf(varargin)
+    plotargs={};
+    for i = 1:length(varargin)
+        samples=varargin{i};
+        name=inputname(i);
+        if length(name) == 0
+            name=num2str(i)
+        endif
+        cdf=empirical_cdf(samples, samples);
+        plotargs{i*3}=samples;
+        plotargs{i*3+1}=cdf;
+        plotargs{i*3+2}=["-;" name ";"];
+    endfor
+    plot(plotargs{:});
+    ylim([0, 1]);
+endfunction
