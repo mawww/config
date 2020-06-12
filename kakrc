@@ -3,8 +3,8 @@
 
 set-option global makecmd 'make -j8'
 set-option global grepcmd 'ag --column'
-set-option global clang_options -std=c++1y
-set-option global ui_options ncurses_status_on_top=true
+set-option global ui_options terminal_status_on_top=true
+hook global ModuleLoaded clang %{ set-option global clang_options -std=c++17 }
 
 colorscheme gruvbox
 
@@ -41,7 +41,7 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 # ───────────────────────────────────
 
 declare-option -hidden regex curword
-set-face global CurWord default,rgb:4a4a4a
+set-face global CurWord default,rgba:80808040
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
@@ -148,7 +148,7 @@ declare-option str gdb_server_cmd "gdbserver :%opt{gdb_server_port}"
 
 define-command gdb-server -params .. %{
     fifo %opt{gdb_server_cmd} %arg{@}
-    gdb-session-new -ex "target remote :%opt{gdb_server_port}"
+    gdb-session-new -ex "target extended-remote :%opt{gdb_server_port}"
 }
 
 
