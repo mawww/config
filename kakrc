@@ -66,8 +66,8 @@ evaluate-commands %sh{
         Darwin)  copy="pbcopy"; paste="pbpaste" ;;
     esac
 
-    printf "map global user -docstring 'paste (after) from clipboard' p '!%s<ret>'\n" "$paste"
-    printf "map global user -docstring 'paste (before) from clipboard' P '<a-!>%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'paste (after) from clipboard' p '<a-!>%s<ret>'\n" "$paste"
+    printf "map global user -docstring 'paste (before) from clipboard' P '!%s<ret>'\n" "$paste"
     printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 primary}<ret>'\n" "$copy"
     printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy -selection clipboard"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
