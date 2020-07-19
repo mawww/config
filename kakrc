@@ -9,7 +9,8 @@ hook global ModuleLoaded clang %{ set-option global clang_options -std=c++17 }
 colorscheme gruvbox
 
 add-highlighter global/ show-matching
-add-highlighter global/ dynregex '%reg{/}' 0:+u
+
+hook global RegisterModified '/' %{ add-highlighter -override global/search regex "%reg{/}" 0:+u }
 
 hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
 
@@ -40,18 +41,16 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 # Highlight the word under the cursor
 # ───────────────────────────────────
 
-declare-option -hidden regex curword
 set-face global CurWord default,rgba:80808040
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
         exec <space><a-i>w <a-k>\A\w+\z<ret>
-        set-option buffer curword "\b\Q%val{selection}\E\b"
+        add-highlighter -override global/curword regex "\b\Q%val{selection}\E\b" 0:CurWord
     } catch %{
-        set-option buffer curword ''
+        add-highlighter -override global/curword group
     } }
 }
-add-highlighter global/ dynregex '%opt{curword}' 0:CurWord
 
 # Custom mappings
 # ───────────────
