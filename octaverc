@@ -6,6 +6,7 @@ function cdf(varargin)
         if length(name) == 0
             name=num2str(i)
         endif
+        samples=sort(samples);
         cdf=empirical_cdf(samples, samples);
         plotargs{i*3}=samples;
         plotargs{i*3+1}=cdf;
