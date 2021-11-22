@@ -76,15 +76,21 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 # ─────────────────────────
 
 evaluate-commands %sh{
-    case $(uname) in
-        Linux) copy="xclip -i"; paste="xclip -o" ;;
-        Darwin)  copy="pbcopy"; paste="pbpaste" ;;
-    esac
+    if [ -n "$SSH_TTY" ]; then
+        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > /dev/tty'
+        paste='printf "paste unsupported through ssh"'
+        backend="OSC 52"
+    else
+        case $(uname) in
+            Linux) copy="xclip -i"; paste="xclip -o"; backend=X11 ;;
+            Darwin)  copy="pbcopy"; paste="pbpaste"; backend=OSX ;;
+        esac
+    fi
 
     printf "map global user -docstring 'paste (after) from clipboard' p '<a-!>%s<ret>'\n" "$paste"
     printf "map global user -docstring 'paste (before) from clipboard' P '!%s<ret>'\n" "$paste"
-    printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 primary}<ret>'\n" "$copy"
-    printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to X11 clipboard}<ret>'\n" "$copy -selection clipboard"
+    printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s primary}<ret>'\n" "$copy" "$backend"
+    printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s clipboard}<ret>'\n" "$copy -selection clipboard" "$backend"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
 }
 
