@@ -6,7 +6,7 @@ set-option global grepcmd 'ag --column'
 set-option global ui_options terminal_status_on_top=true
 hook global ModuleLoaded clang %{ set-option global clang_options -std=c++17 }
 
-colorscheme gruvbox
+colorscheme gruvbox-dark
 
 add-highlighter global/ show-matching
 
@@ -51,6 +51,21 @@ hook global NormalIdle .* %{
         add-highlighter -override global/curword group
     } }
 }
+
+# Switch cursor color in insert mode
+# ──────────────────────────────────
+
+set-face global InsertCursor default,green+B
+
+hook global ModeChange .*:.*:insert %{
+    set-face window PrimaryCursor InsertCursor
+    set-face window PrimaryCursorEol InsertCursor
+}
+
+hook global ModeChange .*:insert:.* %{ try %{
+    unset-face window PrimaryCursor
+    unset-face window PrimaryCursorEol
+} }
 
 # Custom mappings
 # ───────────────
@@ -152,6 +167,17 @@ define-command gdb-server -params .. %{
     gdb-session-new -ex "target extended-remote :%opt{gdb_server_port}"
 }
 
+
+declare-option str to_asm_cmd 'g++ -O3'
+
+define-command to-asm -override %{
+    evaluate-commands -try-client "%opt{docsclient}" "
+        execute-keys -save-regs '' -client '%val{client}' y
+        edit -scratch *asm*
+        set-option buffer filetype gas
+        execute-keys '\%R|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg'
+    "
+}
 
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
