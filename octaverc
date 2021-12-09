@@ -4,7 +4,7 @@ function cdf(varargin)
         samples=varargin{i};
         name=inputname(i);
         if length(name) == 0
-            name=num2str(i)
+            name=num2str(i);
         endif
         samples=sort(samples);
         cdf=empirical_cdf(samples, samples);
@@ -14,4 +14,9 @@ function cdf(varargin)
     endfor
     plot(plotargs{:});
     ylim([0, 1]);
+endfunction
+
+function samples = read_samples()
+    [~, values]=system("xclip -o");
+    eval(["samples=[", values, "];"]);
 endfunction
