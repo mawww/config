@@ -177,12 +177,12 @@ define-command gdb-server -params .. %{
 declare-option str to_asm_cmd 'g++ -O3'
 
 define-command to-asm -override %{
-    evaluate-commands -try-client "%opt{docsclient}" "
-        execute-keys -save-regs '' -client '%val{client}' y
+    evaluate-commands -try-client %opt{docsclient} %{
+        execute-keys -save-regs '' -client %val{client} y
         edit -scratch *asm*
         set-option buffer filetype gas
-        execute-keys '\%R|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg'
-    "
+        execute-keys \%R "|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg"
+    }
 }
 
 # Load local Kakoune config file if it exists
