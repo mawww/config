@@ -2,6 +2,9 @@ set download-path=~/dl/
 set hint-keys=abcdefghijklmnopqrstuvwxyz
 set hint-keys-same-length=true
 set hint-timeout=0
+set accelerated-2d-canvas=true
+set hardware-acceleration-policy=always
+set webgl=true
 
 set editor-command=urxvt -e kak %s
 set x-hint-command=:sh! mpv <C-R>;<CR>
