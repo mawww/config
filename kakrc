@@ -183,13 +183,18 @@ define-command gdb-server -params .. %{
 declare-option str to_asm_cmd 'g++ -O3'
 
 define-command to-asm -override %{
-    evaluate-commands -try-client %opt{docsclient} %{
-        execute-keys -save-regs '' -client %val{client} y
-        edit -scratch *asm*
-        set-option buffer filetype gas
-        execute-keys \%R "|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg"
+    evaluate-commands %{
+        execute-keys -save-regs '' y
+        evaluate-commands -try-client %opt{docsclient} %{
+            edit -scratch *asm*
+            set-option buffer filetype gas
+            execute-keys \%R "|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg"
+        }
     }
 }
+
+
+hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
 
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
