@@ -82,7 +82,13 @@ evaluate-commands %sh{
         backend="OSC 52"
     else
         case $(uname) in
-            Linux) copy="xclip -i"; paste="xclip -o"; backend=X11 ;;
+            Linux)
+                if [ -n "$WAYLAND_DISPLAY" ]; then
+                    copy="wl-copy -p"; paste="wl-paste -p"; backend=Wayland
+                else
+                    copy="xclip -i"; paste="xclip -o"; backend=X11
+                fi
+                ;;
             Darwin)  copy="pbcopy"; paste="pbpaste"; backend=OSX ;;
         esac
     fi
