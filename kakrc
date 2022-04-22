@@ -193,6 +193,22 @@ define-command to-asm -override %{
     }
 }
 
+define-command diff-buffers -override -params 2 %{
+    evaluate-commands %sh{
+        file1=$(mktemp)
+        file2=$(mktemp)
+        echo "
+            evaluate-commands -buffer '$1' write -force $file1
+            evaluate-commands -buffer '$2' write -force $file2
+            edit! -scratch *diff-buffers*
+            set buffer filetype diff
+            set-register | 'diff -u $file1 $file2; rm $file1 $file2'
+            execute-keys !<ret>gg
+        "
+}}
+
+complete-command diff-buffers buffer
+
 
 hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
 
