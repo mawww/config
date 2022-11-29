@@ -5,12 +5,15 @@ set-option global makecmd 'make -j8'
 set-option global grepcmd 'ag --column'
 set-option global ui_options terminal_status_on_top=true
 hook global ModuleLoaded clang %{ set-option global clang_options -std=c++17 }
+hook global ModuleLoaded tmux %{ alias global terminal tmux-terminal-vertical }
 
 colorscheme gruvbox-dark
 
 add-highlighter global/ show-matching
 
-hook global RegisterModified '/' %{ add-highlighter -override global/search regex "%reg{/}" 0:+u }
+set-face global CurSearch +u
+
+hook global RegisterModified '/' %{ add-highlighter -override global/search regex "%reg{/}" 0:CurSearch }
 
 hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
 
@@ -41,11 +44,11 @@ map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>
 # Highlight the word under the cursor
 # ───────────────────────────────────
 
-set-face global CurWord default+b
+set-face global CurWord +b
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
-        exec <space><a-i>w <a-k>\A\w+\z<ret>
+        exec ,<a-i>w <a-k>\A\w+\z<ret>
         add-highlighter -override global/curword regex "\b\Q%val{selection}\E\b" 0:CurWord
     } catch %{
         add-highlighter -override global/curword group
@@ -77,7 +80,7 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 
 evaluate-commands %sh{
     if [ -n "$SSH_TTY" ]; then
-        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > /dev/tty'
+        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > /proc/$kak_client_pid/fd/0'
         paste='printf "paste unsupported through ssh"'
         backend="OSC 52"
     else
@@ -209,8 +212,12 @@ define-command diff-buffers -override -params 2 %{
 
 complete-command diff-buffers buffer
 
+define-command clang-format-cursor %{
+    exec -draft <percent>| "clang-format --lines=%val{cursor_line}:%val{cursor_line}" <ret>
+}
 
 hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
+hook global GlobalSetOption 'makecmd=bazel\b.*' %{ complete-command make shell-script-candidates %{ bazel query //... } }
 
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
