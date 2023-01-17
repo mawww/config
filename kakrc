@@ -80,7 +80,7 @@ map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>
 
 evaluate-commands %sh{
     if [ -n "$SSH_TTY" ]; then
-        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > /proc/$kak_client_pid/fd/0'
+        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > $( [ -n "$kak_client_pid" ] && echo /proc/$kak_client_pid/fd/0 || echo /dev/tty )'
         paste='printf "paste unsupported through ssh"'
         backend="OSC 52"
     else
@@ -101,6 +101,7 @@ evaluate-commands %sh{
     printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s primary}<ret>'\n" "$copy" "$backend"
     printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s clipboard}<ret>'\n" "$copy -selection clipboard" "$backend"
     printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
+    printf "define-command -override echo-to-clipboard -params .. %%{ echo -to-shell-script '%s' -- %%arg{@} }" "$copy"
 }
 
 # Various mappings
