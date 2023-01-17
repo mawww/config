@@ -185,14 +185,19 @@ define-command gdb-server -params .. %{
 
 
 declare-option str to_asm_cmd 'g++ -O3'
+declare-option str to_asm_prelude '
+#include <utility>
+'
 
-define-command to-asm -override %{
+define-command to-asm -params .. -override %{
     evaluate-commands %{
         execute-keys -save-regs '' y
         evaluate-commands -try-client %opt{docsclient} %{
             edit -scratch *asm*
             set-option buffer filetype gas
-            execute-keys \%R "|%opt{to_asm_cmd} -x c++ -S - -o - 2>&1|c++filt<ret>gg"
+            set-register a %opt{to_asm_prelude}
+            execute-keys \%R"aP% "|%opt{to_asm_cmd} %arg{@} -x c++ -S - -o - 2>&1|c++filt<ret>" gg
+            try %{ execute-keys -draft \%s^\h*\.cfi_<ret>xd }
         }
     }
 }
