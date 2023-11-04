@@ -1,0 +1,2 @@
+#!/bin/sh
+bandcamp-sort "$1" | xargs -d '\n' mpv --vo=null
