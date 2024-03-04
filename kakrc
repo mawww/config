@@ -9,7 +9,7 @@ hook global ModuleLoaded tmux %{ alias global terminal tmux-terminal-vertical }
 
 colorscheme gruvbox-dark
 
-add-highlighter global/ show-matching
+add-highlighter global/ show-matching -previous
 
 set-face global CurSearch +u
 
