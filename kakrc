@@ -173,22 +173,40 @@ define-command gdb-server -params .. %{
 }
 
 
-declare-option str to_asm_cmd 'g++ -O3'
+declare-option str to_asm_cmd 'g++ -O3 -x c++'
 declare-option str to_asm_prelude '
 #include <utility>
 '
+declare-option -hidden int to_asm_timestamp 0
 
-define-command to-asm -params .. -override %{
-    evaluate-commands %{
+define-command to-asm -params .. -docstring %{
+    Compile selected text with using the to_asm_cmd option and display assembly in the *asm* buffer
+} %{
+    evaluate-commands -save-regs 'ab"|' %{
         execute-keys -save-regs '' y
+        set-register a %opt{to_asm_prelude}
+        set-register b %opt{to_asm_cmd}
         evaluate-commands -try-client %opt{docsclient} %{
             edit -scratch *asm*
             set-option buffer filetype gas
-            set-register a %opt{to_asm_prelude}
-            execute-keys \%R"aP% "|%opt{to_asm_cmd} %arg{@} -x c++ -S - -o - 2>&1|c++filt<ret>" gg
+            execute-keys \%R"aP% "|%reg{b} %arg{@} -S - -o - 2>&1|c++filt<ret>" gg
             try %{ execute-keys -draft \%s^\h*\.cfi_<ret>xd }
         }
     }
+}
+
+define-command to-asm-enable -docstring %{
+    Automatically run to-asm on the whole buffer after each change
+} %{
+    remove-hooks window to-asm
+    hook -group to-asm window NormalIdle .* %{ try %{
+        %sh{ [ $kak_opt_to_asm_timestamp -eq $kak_timestamp ] && echo "fail" || echo "nop" }
+        set buffer to_asm_timestamp %val{timestamp}
+        evaluate-commands -draft %{
+            execute-keys '%'
+            to-asm
+        }
+    } }
 }
 
 define-command diff-buffers -override -params 2 %{
