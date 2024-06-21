@@ -164,28 +164,6 @@ define-command swap-buffer-with -override -params 1 -client-completion %{
     buffer %opt{swap_buffer_target}
 }
 
-define-command -params .. fifo %{ evaluate-commands %sh{
-    name='*fifo*'
-    while true; do
-        case "$1" in
-            "-scroll") scroll="-scroll"; shift ;;
-            "-name") name="$2"; shift 2 ;;
-            "--") shift; break ;;
-            *) break ;;
-        esac
-    done
-    output=$(mktemp -d "${TMPDIR:-/tmp}"/kak-fifo.XXXXXXXX)/fifo
-    mkfifo ${output}
-    ( eval "$@" > ${output} 2>&1 & ) > /dev/null 2>&1 < /dev/null
-
-    printf %s\\n "evaluate-commands -try-client '$kak_opt_toolsclient' %{
-              edit! -fifo ${output} ${scroll} ${name}
-              hook -always -once buffer BufCloseFifo .* %{ nop %sh{ rm -r $(dirname ${output}) } }
-          }"
-}}
-
-complete-command fifo shell
-
 declare-option int gdb_server_port 5678
 declare-option str gdb_server_cmd "gdbserver :%opt{gdb_server_port}"
 
