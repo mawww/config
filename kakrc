@@ -4,7 +4,7 @@
 set-option global makecmd 'make -j8'
 set-option global grepcmd 'ag --column'
 set-option global ui_options terminal_status_on_top=true
-hook global ModuleLoaded clang %{ set-option global clang_options -std=c++17 }
+hook global ModuleLoaded clang %{ set-option global clang_options -std=c++20 }
 hook global ModuleLoaded tmux %{ alias global terminal tmux-terminal-vertical }
 
 colorscheme gruvbox-dark
@@ -129,7 +129,8 @@ hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap wi
 # Helper commands
 # ───────────────
 
-define-command find -menu -params 1 -shell-script-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" } %{ edit %arg{1} }
+define-command find -params 1 %{ edit %arg{1} }
+complete-command -menu find shell-script-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" }
 
 define-command mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
 
@@ -231,6 +232,11 @@ define-command clang-format-cursor %{
 
 hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
 hook global GlobalSetOption 'makecmd=bazel\b.*' %{ complete-command make shell-script-candidates %{ bazel query //... } }
+
+# Mail
+# ────
+
+hook global BufOpenFile .*/mail/.*/(cur|new|tmp)/[^/]+ %{ set-option buffer filetype mail }
 
 # Load local Kakoune config file if it exists
 # ───────────────────────────────────────────
