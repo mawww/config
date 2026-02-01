@@ -117,8 +117,7 @@ map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>
 
 map global user -docstring 'lsp mode' l ':enter-user-mode lsp<ret>'
 
-hook global -always BufOpenFifo '\*grep\*' %{ map global normal <minus> ': grep-next-match<ret>' }
-hook global -always BufOpenFifo '\*make\*' %{ map global normal <minus> ': make-next-error<ret>' }
+map global normal <minus> ': jump-next -matching \*(grep|make)(-[-\w]+)?\*<ret>'
 
 # Enable <tab>/<s-tab> for insert completion selection
 # ──────────────────────────────────────────────────────
