@@ -1,7 +1,7 @@
 # User preference
 # ───────────────
 
-set-option global makecmd 'make -j8'
+set-option global makecmd 'make -j$(nproc)'
 set-option global grepcmd 'ag --column'
 set-option global ui_options terminal_status_on_top=true
 hook global ModuleLoaded clang %{ set-option global clang_options -std=c++20 }
