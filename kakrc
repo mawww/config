@@ -74,6 +74,7 @@ hook global ModeChange .*:insert:.* %{ try %{
 # ───────────────
 
 map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
+map global normal <c-/> ":set-register / ''<ret>"
 
 # System clipboard handling
 # ─────────────────────────
