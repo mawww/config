@@ -106,6 +106,8 @@ bindsym $mod+minus scratchpad show
 bindsym $mod+z output - scale 1
 bindsym $mod+Shift+z output - scale 3
 
+bindsym $mod+m exec mpv --force-window=immediate $(wl-paste)
+
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
