@@ -13,9 +13,13 @@ output eDP-1 position 500,2160
 output DP-1 allow_tearing yes
 output DP-1 max_render_time off
 
-exec swayidle -w timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+exec swayidle -w timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
 exec gentoo-pipewire-launcher restart
 exec waybar
+
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
+seat seat0 xcursor_theme Adwaita
 
 ### Input configuration
 #
