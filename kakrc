@@ -233,6 +233,36 @@ define-command clang-format-cursor %{
 hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
 hook global GlobalSetOption 'makecmd=bazel\b.*' %{ complete-command make shell-script-candidates %{ bazel query //... } }
 
+# Language highlighting in Diffs
+
+hook global ModuleLoaded diff %{
+    set-face global DiffAdd ,rgba:00800080
+    set-face global DiffRm ,rgba:80000080
+}
+
+define-command diff-load-languages %{
+    evaluate-commands -draft -save-regs /a %{
+        try %{
+            add-highlighter shared/diff/languages regions
+        }
+
+        execute-keys '%s^\+\+\+ [^\n]+\.\K\w+$<ret>'
+        eval -draft %{
+            edit -scratch "*diff-filetype-resolver*.%val{selection}"
+            set-register a %opt{filetype}
+            delete-buffer
+        }
+        try %{
+            require-module %reg{a}
+            add-highlighter "shared/diff/languages/%val{selection}" region "^\+\+\+ [^\n]+\.%val{selection}$" "^diff" ref "%reg{a}"
+        }
+    }
+}
+
+hook -group diff-load-languages global WinSetOption filetype=diff diff-load-languages
+hook -group diff-load-languages global WinSetOption filetype=git-log %{ hook -once buffer BufCloseFifo .* diff-load-languages }
+
+
 # Mail
 # ────
 
