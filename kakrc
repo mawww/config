@@ -247,21 +247,22 @@ define-command diff-load-languages %{
         }
 
         execute-keys '%s^\+\+\+ [^\n]+\.\K\w+$<ret>'
-        eval -draft %{
-            edit -scratch "*diff-filetype-resolver*.%val{selection}"
-            set-register a %opt{filetype}
-            delete-buffer
-        }
-        try %{
-            require-module %reg{a}
-            add-highlighter "shared/diff/languages/%val{selection}" region "^\+\+\+ [^\n]+\.%val{selection}$" "^diff" ref "%reg{a}"
+        evaluate-commands -itersel %{
+            evaluate-commands -draft %{
+                edit -scratch "*diff-filetype-resolver*.%val{selection}"
+                set-register a %opt{filetype}
+                delete-buffer
+            }
+            try %{
+                require-module %reg{a}
+                add-highlighter "shared/diff/languages/%val{selection}" region "^\+\+\+ [^\n]+\.%val{selection}$" "^diff" ref "%reg{a}"
+            }
         }
     }
 }
 
 hook -group diff-load-languages global WinSetOption filetype=diff diff-load-languages
-hook -group diff-load-languages global WinSetOption filetype=git-log %{ hook -once buffer BufCloseFifo .* diff-load-languages }
-
+hook -group diff-load-languages global WinSetOption filetype=git-(log|diff) %{ hook -once buffer BufCloseFifo .* diff-load-languages }
 
 # Mail
 # ────
