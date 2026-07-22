@@ -264,6 +264,8 @@ define-command diff-load-languages %{
 hook -group diff-load-languages global WinSetOption filetype=diff diff-load-languages
 hook -group diff-load-languages global WinSetOption filetype=git-(log|diff) %{ hook -once buffer BufCloseFifo .* diff-load-languages }
 
+hook global GlobalSetOption gdb_dir=.* %{ echo-to-clipboard "new-ui mi3 %opt{gdb_dir}/pty" }
+
 # Mail
 # ────
 
