@@ -7,8 +7,11 @@ set $term foot
 set $menu wmenu-run
 
 output * bg ~/misc/wallpaper/dark-wood-texture-wallpaper-for-2560x1440-62-383.jpg fill
-output DP-1 position 0,0
-output eDP-1 position 500,2160
+output DP-1 position 0,0 scale 1
+output eDP-1 position 500,2160 scale 1
+output eDP-1 mode 2560x1600@60Hz
+output DP-1 subpixel rgb
+output eDP-1 subpixel vrgb
 
 output DP-1 allow_tearing yes
 output DP-1 max_render_time off
@@ -107,8 +110,14 @@ bindsym $mod+a focus parent
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
+bindsym $mod+i input type:keyboard xkb_layout us
+bindsym $mod+Shift+i input type:keyboard xkb_layout us_intl
+
 bindsym $mod+z output - scale 1
 bindsym $mod+Shift+z output - scale 3
+
+bindsym $mod+g output DP-1 mode 3840x2160@60Hz
+bindsym $mod+Shift+g output DP-1 mode 3840x2160@150Hz
 
 bindsym $mod+m exec mpv --force-window=immediate $(wl-paste)
 
