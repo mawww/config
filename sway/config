@@ -116,7 +116,7 @@ bindsym $mod+i input type:keyboard xkb_layout us
 bindsym $mod+Shift+i input type:keyboard xkb_layout us_intl
 
 # scale +/-
-bindsym $mod+z       exec swaymsg output - scale $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .scale-1')
+bindsym $mod+z       exec swaymsg output - scale $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | if .scale >= 2 then .scale-1 else 1 end')
 bindsym $mod+Shift+z exec swaymsg output - scale $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .scale+1')
 
 # switch refresh rate to min/max
