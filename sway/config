@@ -110,16 +110,21 @@ bindsym $mod+a focus parent
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
+# layout switch
 bindsym $mod+i input type:keyboard xkb_layout us
 bindsym $mod+Shift+i input type:keyboard xkb_layout us_intl
 
-bindsym $mod+z output - scale 1
-bindsym $mod+Shift+z output - scale 3
+# scale +/-
+bindsym $mod+z       exec swaymsg output - scale $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .scale-1')
+bindsym $mod+Shift+z exec swaymsg output - scale $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .scale+1')
 
-bindsym $mod+g output DP-1 mode 3840x2160@60Hz
-bindsym $mod+Shift+g output DP-1 mode 3840x2160@150Hz
+# switch refresh rate to min/max
+bindsym $mod+g       exec swaymsg output - mode $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .current_mode as $cur | .modes | map(select(.width==$cur.width and .height == $cur.height)) | min_by(.refresh) | "\(.width)x\(.height)@\(.refresh / 1000.0)Hz"')
+bindsym $mod+Shift+g exec swaymsg output - mode $(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused) | .current_mode as $cur | .modes | map(select(.width==$cur.width and .height == $cur.height)) | max_by(.refresh) | "\(.width)x\(.height)@\(.refresh / 1000.0)Hz"')
 
 bindsym $mod+m exec mpv --force-window=immediate $(wl-paste)
+
+bindsym --release $mod+Shift+s exec echo mem > /sys/power/state
 
 mode "resize" {
     # left will shrink the containers width
@@ -159,5 +164,7 @@ bindsym --locked XF86AudioStop exec playerctl stop
 # Special keys to adjust brightness via brightnessctl
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+for_window [class=cs2] allow_tearing true
 
 include /etc/sway/config.d/*
