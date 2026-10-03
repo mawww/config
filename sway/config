@@ -45,6 +45,7 @@ seat seat0 xcursor_theme Adwaita
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+q kill
 bindsym $mod+d exec $menu
+bindsym $mod+p exec pass show -c "$(find .password-store/ -type f -and -not -path '*/[.]*' | sed 's,^\.password-store/,,; s/\.gpg//' | wmenu)"
 
 floating_modifier $mod normal
 
